@@ -50,14 +50,14 @@ func (q *SqlQueryMaker) Add(query string, args ...interface{}) *SqlQueryMaker {
 	return q
 }
 
-func (q *SqlQueryMaker) AND() string {
+func (q *SqlQueryMaker) AND() *SqlQueryMaker {
 	q.query.WriteString("AND ")
-	return q.query.String()
+	return q
 }
 
-func (q *SqlQueryMaker) OR() string {
+func (q *SqlQueryMaker) OR() *SqlQueryMaker {
 	q.query.WriteString("OR ")
-	return q.query.String()
+	return q
 }
 
 func (q *SqlQueryMaker) Query() string {
