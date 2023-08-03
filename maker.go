@@ -5,15 +5,18 @@ import (
 	"strings"
 )
 
+var prefixes = [...]string{"or", "OR", "and", "AND"}
+
 type SqlQueryMaker struct {
 	symbol      rune
-	query       strings.Builder
+	query       *strings.Builder
 	args        []interface{}
 	fieldsCount int
 }
 
 func NewQueryMaker(argsCount int) *SqlQueryMaker {
 	q := &SqlQueryMaker{
+		query:       &strings.Builder{},
 		args:        make([]interface{}, 0, argsCount),
 		fieldsCount: 1,
 		symbol:      '?',
@@ -45,6 +48,33 @@ func (q *SqlQueryMaker) Add(query string, args ...interface{}) *SqlQueryMaker {
 		} else {
 			q.query.WriteRune(runes[i])
 		}
+	}
+
+	return q
+}
+
+func (q *SqlQueryMaker) WhereOptional(modifyFunc func()) *SqlQueryMaker {
+	mainBuilder := q.query
+
+	q.query = &strings.Builder{}
+	q.query.Grow(100)
+
+	startLen := q.query.Len()
+
+	modifyFunc()
+
+	if q.query.Len() != startLen {
+		mainBuilder.WriteString("WHERE ")
+		queryStr := strings.TrimSpace(q.query.String())
+
+		for i := 0; i < 4; i++ {
+			queryStr = strings.TrimPrefix(queryStr, prefixes[i])
+		}
+
+		q.query = mainBuilder
+		q.query.WriteRune(' ')
+	} else {
+		q.query = mainBuilder
 	}
 
 	return q
