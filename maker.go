@@ -74,3 +74,8 @@ func (q *SqlQueryMaker) Query() string {
 func (q *SqlQueryMaker) Args() []interface{} {
 	return q.args
 }
+
+// Make return query and args
+func (q *SqlQueryMaker) Make() (string, []interface{}) {
+	return q.query.String(), q.args
+}
