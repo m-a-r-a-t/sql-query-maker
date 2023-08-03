@@ -71,6 +71,7 @@ func (q *SqlQueryMaker) WhereOptional(modifyFunc func()) *SqlQueryMaker {
 			queryStr = strings.TrimPrefix(queryStr, prefixes[i])
 		}
 
+		mainBuilder.WriteString(queryStr)
 		q.query = mainBuilder
 		q.query.WriteRune(' ')
 	} else {
