@@ -50,6 +50,13 @@ func (q *SqlQueryMaker) Add(query string, args ...interface{}) *SqlQueryMaker {
 	return q
 }
 
+func (q *SqlQueryMaker) Clear() *SqlQueryMaker {
+	q.query.Reset()
+	q.fieldsCount = 1
+	q.args = q.args[:0]
+	return q
+}
+
 func (q *SqlQueryMaker) AND() *SqlQueryMaker {
 	q.query.WriteString("AND ")
 	return q
