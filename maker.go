@@ -7,11 +7,16 @@ import (
 
 var prefixes = [...]string{"or", "OR", "and", "AND"}
 
+type insertParams struct {
+	isValuesAdded bool
+}
+
 type SqlQueryMaker struct {
-	symbol      rune
-	query       *strings.Builder
-	args        []interface{}
-	fieldsCount int
+	symbol       rune
+	query        *strings.Builder
+	args         []interface{}
+	fieldsCount  int
+	insertParams insertParams
 }
 
 func NewQueryMaker(argsCount int) *SqlQueryMaker {
@@ -109,4 +114,30 @@ func (q *SqlQueryMaker) Args() []interface{} {
 // Make return query and args
 func (q *SqlQueryMaker) Make() (string, []interface{}) {
 	return q.query.String(), q.args
+}
+
+func (q *SqlQueryMaker) Values(args ...interface{}) *SqlQueryMaker {
+	strBuilder := strings.Builder{}
+
+	if q.insertParams.isValuesAdded {
+		strBuilder.WriteRune(',')
+	}
+
+	strBuilder.WriteRune('(')
+	for i := 0; i < len(args); i++ {
+		if i != 0 {
+			strBuilder.WriteRune(',')
+		}
+
+		strBuilder.WriteRune('?')
+	}
+	strBuilder.WriteRune(')')
+
+	if !q.insertParams.isValuesAdded {
+		q.insertParams.isValuesAdded = true
+	}
+
+	q.Add(strBuilder.String(), args...)
+
+	return q
 }
