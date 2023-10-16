@@ -86,6 +86,20 @@ func (q *SqlQueryMaker) WhereOptional(modifyFunc func()) *SqlQueryMaker {
 	return q
 }
 
+func (q *SqlQueryMaker) Where(query string, args ...interface{}) *SqlQueryMaker {
+	curQuery := strings.TrimSuffix(strings.TrimSpace(q.query.String()), ",")
+
+	q.query.Reset()
+
+	_, _ = q.query.WriteString(curQuery)
+
+	q.query.WriteRune(' ')
+
+	q.Add("WHERE")
+
+	return q.Add(query, args...)
+}
+
 func (q *SqlQueryMaker) Clear() *SqlQueryMaker {
 	q.query.Reset()
 	q.fieldsCount = 1
