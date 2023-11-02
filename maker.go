@@ -135,6 +135,8 @@ func (q *SqlQueryMaker) Values(args ...interface{}) *SqlQueryMaker {
 
 	if q.insertParams.isValuesAdded {
 		strBuilder.WriteRune(',')
+	} else {
+		strBuilder.WriteString("VALUES ")
 	}
 
 	strBuilder.WriteRune('(')

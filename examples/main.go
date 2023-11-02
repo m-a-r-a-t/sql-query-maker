@@ -13,7 +13,7 @@ type Object struct {
 func main() {
 	maker := sql_query_maker.NewQueryMaker(10)
 
-	maker.Add("INSERT INTO object(id,name) VALUES")
+	maker.Add("INSERT INTO object(id,name)")
 
 	values := []Object{
 		{"1", "ffd"},
