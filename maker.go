@@ -2,8 +2,6 @@ package sql_query_maker
 
 import (
 	"fmt"
-	"github.com/lib/pq"
-	"reflect"
 	"strings"
 )
 
@@ -129,12 +127,6 @@ func (q *SqlQueryMaker) Args() []interface{} {
 
 // Make return query and args
 func (q *SqlQueryMaker) Make() (string, []interface{}) {
-	for i := 0; i < len(q.args); i++ {
-		if reflect.TypeOf(q.args[i]).Kind() == reflect.Slice {
-			q.args[i] = pq.Array(q.args[i])
-		}
-	}
-
 	return q.query.String(), q.args
 }
 
