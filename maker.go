@@ -104,6 +104,8 @@ func (q *SqlQueryMaker) Clear() *SqlQueryMaker {
 	q.query.Reset()
 	q.fieldsCount = 1
 	q.args = q.args[:0]
+	q.insertParams.isValuesAdded = false
+
 	return q
 }
 
